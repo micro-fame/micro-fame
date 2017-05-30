@@ -1,7 +1,8 @@
 const micro = require('micro');
 const Promise = require('bluebird');
+const { PORT } = process.env;
 
-module.exports = ({ port = 0 }, router) => {
+module.exports = ({ port = PORT || 0 }, router) => {
   return new Promise((resolve, reject) => {
     const server = micro(router);
     server.listen(port, () => {
