@@ -44,7 +44,7 @@ const Boot = async (options = {}) => {
   };
 
   const appInstance = await app(config);
-  return await server(options, appInstance.router);
+  return server(options, appInstance.router);
 };
 
 module.exports = Boot;
