@@ -1,0 +1,45 @@
+{
+  "name": "micro-fame",
+  "version": "0.0.1",
+  "description": "rest api framework for micro",
+  "main": "src/index.js",
+  "author": "Yogesh Agarwal",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon --exec babel-node test/rest-test.js",
+    "lint": "eslint src/**/*.js",
+    "test": "ava test/test.js",
+    "build": "npm run lint && npm run test"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "lodash.kebabcase": "^4.1.1",
+    "micro": "^7.3.3",
+    "micro-compose": "^0.0.3",
+    "micro-router": "^0.1.1",
+    "microrouter": "^2.1.1"
+  },
+  "devDependencies": {
+    "ava": "^0.19.1",
+    "axios": "^0.16.1",
+    "babel": "^6.5.2",
+    "babel-cli": "^6.18.0",
+    "babel-eslint": "^7.1.1",
+    "babel-plugin-syntax-decorators": "^6.13.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-node7": "^1.4.0",
+    "eslint": "^3.12.2",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-babel": "^4.0.0",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-standard": "^2.0.1",
+    "nodemon": "^1.11.0",
+    "then-sleep": "^1.0.1"
+  },
+  "ava": {
+    "require": "babel-register",
+    "babel": {
+      "babelrc": true
+    }
+  }
+}
