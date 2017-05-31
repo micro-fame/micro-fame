@@ -1,12 +1,10 @@
 const { RestModel, Remote } = require('../../src');
 
 function PostRemote(config) {
-  const c = Object.assign({}, {
+  return Remote(Object.assign({}, {
     argsGetter: 'body',
     method: 'post'
-  }, config);
-  console.log('c', c);
-  return Remote(c);
+  }, config));
 }
 
 @RestModel({
