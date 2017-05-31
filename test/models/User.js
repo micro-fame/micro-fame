@@ -76,6 +76,16 @@ class User {
     return { name, text, number };
   }
 
+  @Remote({
+    path: '/promiseTest/:text',
+    method: 'get'
+  })
+  promiseTest(text) {
+    return new Promise((resolve, reject) => {
+      resolve(text);
+    });
+  }
+
 };
 
 module.exports = User;
