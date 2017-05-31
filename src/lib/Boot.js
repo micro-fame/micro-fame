@@ -18,7 +18,8 @@ let isInit = false;
  * @param {String} rootDir - Root directory
  */
 const loadModels = (rootDir) => {
-  loadJS('models', rootDir);
+  const js = loadJS('models', rootDir);
+  assert(js.length, `Not found models directory in root directory: ${rootDir}`)
 };
 
 /**
