@@ -1,7 +1,6 @@
 import test from 'ava';
 import axios from 'axios';
 import path from 'path';
-const sleep = require('then-sleep');
 const { Boot } = require('../src');
 
 const OK = 'OK';
@@ -15,7 +14,6 @@ test.before(async t => {
     baseURL: url,
     timeout: 5000
   });
-  // await sleep(1000000)
 });
 
 test('index', async t => {
@@ -86,3 +84,10 @@ test('get mix params query body', async t => {
     text: 'hello'
   });
 });
+
+test('get test', async t => {
+  const { statusText, data } = await caller.get('/no-user/promiseTest/Hi-Promise');
+  t.is(statusText, OK);
+  t.is(data, 'Hi-Promise');
+});
+
