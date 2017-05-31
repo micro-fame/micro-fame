@@ -1,5 +1,14 @@
 const { RestModel, Remote } = require('../../src');
 
+function PostRemote(config) {
+  const c = Object.assign({}, {
+    argsGetter: 'body',
+    method: 'post'
+  }, config);
+  console.log('c', c);
+  return Remote(c);
+}
+
 @RestModel({
   endpoint: 'no-user'
 })
@@ -100,6 +109,13 @@ class User {
     method: 'post'
   })
   async argsGetterBody(name, text) {
+    return { text, name };
+  }
+
+  @PostRemote({
+    path: '/postRecipe'
+  })
+  async postRecipe(name, text) {
     return { text, name };
   }
 

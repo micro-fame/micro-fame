@@ -117,3 +117,15 @@ test('get argsGetter body', async t => {
   });
 });
 
+test('get postRecipe body', async t => {
+  const { statusText, data } = await caller.post('/no-user/postRecipe', {
+    name: 'sam',
+    text: 'hello'
+  });
+  t.is(statusText, OK);
+  t.deepEqual(data, {
+    name: 'sam',
+    text: 'hello'
+  });
+});
+
