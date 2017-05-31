@@ -86,6 +86,23 @@ class User {
     });
   }
 
+  @Remote({
+    path: '/argsGetterQuery',
+    argsGetter: 'query'
+  })
+  async argsGetterQuery(name, text) {
+    return { text, name };
+  }
+
+  @Remote({
+    path: '/argsGetterBody',
+    argsGetter: 'body',
+    method: 'post'
+  })
+  async argsGetterBody(name, text) {
+    return { text, name };
+  }
+
 };
 
 module.exports = User;

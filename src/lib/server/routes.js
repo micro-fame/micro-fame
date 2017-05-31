@@ -35,7 +35,6 @@ const initRouter = (routeFns) => {
 };
 
 exports.createRoutes = (name, endpoint, remotes, methods) => {
-
   // const routes = [];
   const routeFns = [];
   for (let [methodName, config] of Object.entries(remotes)) {

@@ -85,9 +85,35 @@ test('get mix params query body', async t => {
   });
 });
 
-test('get test', async t => {
+test('get test promise', async t => {
   const { statusText, data } = await caller.get('/no-user/promiseTest/Hi-Promise');
   t.is(statusText, OK);
   t.is(data, 'Hi-Promise');
+});
+
+test('get argsGetter query', async t => {
+  const { statusText, data } = await caller.get('/no-user/argsGetterQuery', {
+    params: {
+      name: 'sam',
+      text: 'hello'
+    }
+  });
+  t.is(statusText, OK);
+  t.deepEqual(data, {
+    name: 'sam',
+    text: 'hello'
+  });
+});
+
+test('get argsGetter body', async t => {
+  const { statusText, data } = await caller.post('/no-user/argsGetterBody', {
+    name: 'sam',
+    text: 'hello'
+  });
+  t.is(statusText, OK);
+  t.deepEqual(data, {
+    name: 'sam',
+    text: 'hello'
+  });
 });
 

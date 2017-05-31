@@ -1,6 +1,5 @@
 const { json } = require('micro');
-const defaultWrapper = ({ args }) => fn => async (req, res) => {
-
+const defaultWrapper = ({ args, argsGetter = 'params' }) => fn => async (req, res) => {
   if (req.method.toLowerCase() === 'post') {
     req.body = await json(req);
   }
@@ -12,7 +11,7 @@ const defaultWrapper = ({ args }) => fn => async (req, res) => {
       returnValues.push(fn(req));
     });
   } else {
-    returnValues = Object.values(req.params);
+    returnValues = Object.values(req[argsGetter]);
   }
 
   return await fn.apply({}, returnValues);
