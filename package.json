@@ -1,6 +1,6 @@
 {
   "name": "micro-fame",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "rest api framework for micro",
   "main": "src/index.js",
   "author": "Yogesh Agarwal",
