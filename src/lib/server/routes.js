@@ -22,7 +22,7 @@ class Route {
   }
 
   toString() {
-    return `${this.method.toUpperCase()} ${this.path}`
+    return `${this.method.toUpperCase()} ${this.path}`;
   }
 }
 

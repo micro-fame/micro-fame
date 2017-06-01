@@ -19,7 +19,7 @@ let isInit = false;
  */
 const loadModels = (rootDir) => {
   const js = loadJS('models', rootDir);
-  assert(js.length, `Not found models directory in root directory: ${rootDir}`)
+  assert(js.length, `Not found models directory in root directory: ${rootDir}`);
 };
 
 /**
