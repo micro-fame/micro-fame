@@ -52,5 +52,4 @@ exports.createRoutes = (name, endpoint, remotes, methods) => {
   }
   console.log('');
   return routeFns;
-  // return initRouter(routeFns);
 };
