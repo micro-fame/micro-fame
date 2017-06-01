@@ -1,7 +1,9 @@
 const { json } = require('micro');
+const { env: { REQ_BODY_LIMIT, REQ_BODY_ENCODING } } = process;
+
 const defaultWrapper = ({ args, argsGetter = 'params' }) => fn => async (req, res) => {
   if (req.method.toLowerCase() === 'post') {
-    req.body = await json(req);
+    req.body = await json(req, { limit: REQ_BODY_LIMIT, encoding: REQ_BODY_ENCODING });
   }
 
   let returnValues = [];
