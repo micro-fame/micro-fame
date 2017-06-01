@@ -129,3 +129,10 @@ test('get postRecipe body', async t => {
   });
 });
 
+// Items model test
+test('Items model', async t => {
+  const { statusText, data } = await caller.get(path.normalize('/items/total'));
+  t.is(statusText, OK);
+  t.is(data, 100);
+});
+

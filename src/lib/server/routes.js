@@ -20,6 +20,10 @@ class Route {
   routeFn() {
     return microRouter[this.method](this.path, this.execMethod);
   }
+
+  toString() {
+    return `${this.method.toUpperCase()} ${this.path}`
+  }
 }
 
 const notfound = (req, res) => {
@@ -28,7 +32,7 @@ const notfound = (req, res) => {
   throw e;
 };
 
-const initRouter = (routeFns) => {
+exports.initRouter = (routeFns) => {
   routeFns.push(get('/*', notfound));
   routeFns.push(post('/*', notfound));
   return router.apply({}, routeFns);
@@ -36,6 +40,7 @@ const initRouter = (routeFns) => {
 
 exports.createRoutes = (name, endpoint, remotes, methods) => {
   // const routes = [];
+  console.log(`${name} Routes:`);
   const routeFns = [];
   for (let [methodName, config] of Object.entries(remotes)) {
     const execMethod = methods[methodName];
@@ -43,7 +48,9 @@ exports.createRoutes = (name, endpoint, remotes, methods) => {
     const route = new Route(endpoint, methodName, config, defaultWrapper(config)(execMethod));
     // routes.push(route);
     routeFns.push(route.routeFn());
+    console.log(route.toString());
   }
-
-  return initRouter(routeFns);
+  console.log('');
+  return routeFns;
+  // return initRouter(routeFns);
 };

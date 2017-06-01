@@ -5,7 +5,7 @@ const {
   readOnly,
   isEmpty
 } = require('../utils/objectUtils');
-const { createRoutes } = require('./server/routes');
+const { createRoutes, initRouter } = require('./server/routes');
 
 // class having everything. must be init..
 
@@ -35,22 +35,19 @@ class Application {
     }
   }
 
-  createRoutes(name, endpoint, remotes, methods) {
-    this.router = createRoutes(name, endpoint, remotes, methods);
-  }
-
   /**
-   * Not working. Needs restructuring.
    * @param {any} models
    * @memberof Application
    */
   bindModels(models) {
     if (!isEmpty(models)) {
+      let routeFns = [];
       for (let [name, { endpoint, remotes, methods }] of Object.entries(models)) {
         if (endpoint) {
-          this.createRoutes(name, endpoint, remotes, methods);
+          routeFns = [...routeFns, ...createRoutes(name, endpoint, remotes, methods)];
         }
       }
+      this.router = initRouter(routeFns);
     }
   }
 };

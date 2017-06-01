@@ -47,7 +47,7 @@ exports.registerModel = function (klass) {
  * @param {Object} [config]
  * @param {String} config.endpoint - Rest endpoint of this class. Defaults to kebab cased class name
  */
-exports.registerRestModel = (klass, config) => {
+exports.registerRestModel = (klass, config = {}) => {
   const { name } = klass;
   const endpoint = config.endpoint || kebabCase(name);
 
