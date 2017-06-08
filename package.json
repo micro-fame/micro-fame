@@ -8,16 +8,19 @@
   "scripts": {
     "start": "nodemon --exec babel-node test/rest-test.js",
     "lint": "eslint src/**/*.js",
-    "test": "ava test/test.js",
-    "build": "npm run lint && npm run test"
+    "test": "nyc ava test/test.js",
+    "build": "npm run lint && npm run test",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {
     "bluebird": "^3.5.0",
+    "coveralls": "^2.13.1",
     "lodash.kebabcase": "^4.1.1",
     "micro": "^7.3.3",
     "micro-compose": "^0.0.3",
     "micro-router": "^0.1.1",
-    "microrouter": "^2.1.1"
+    "microrouter": "^2.1.1",
+    "nyc": "^11.0.2"
   },
   "devDependencies": {
     "ava": "^0.19.1",

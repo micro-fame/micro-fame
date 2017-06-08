@@ -38,7 +38,6 @@ exports.registerModel = function (klass) {
   assert(ds, `DS not configured for model: ${name}`);
 
   isEmpty(schema) && console.warn(`Schema is empty for model: ${name}`);
-  console.log('klass', klass);
   _models[name] = klass;
 };
 
