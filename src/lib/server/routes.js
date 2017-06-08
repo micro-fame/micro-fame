@@ -1,6 +1,7 @@
 const assert = require('assert');
 const pathM = require('path');
 const microRouter = require('microrouter');
+const compose = require('micro-compose');
 const { router, get, post } = microRouter;
 
 const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'];
@@ -38,14 +39,19 @@ exports.initRouter = (routeFns) => {
   return router.apply({}, routeFns);
 };
 
-exports.createRoutes = (name, endpoint, remotes, methods) => {
+exports.createRoutes = (name, endpoint, remotes, methods, app) => {
   // const routes = [];
   console.log(`${name} Routes:`);
   const routeFns = [];
+  let composers = app.getComposers();
+
   for (let [methodName, config] of Object.entries(remotes)) {
+    config.app = app;
     const execMethod = methods[methodName];
     assert(execMethod, `Method not found for name: ${methodName}, path: ${config.path}`);
-    const route = new Route(endpoint, methodName, config, defaultWrapper(config)(execMethod));
+
+    const fn = compose.apply({}, [...composers, defaultWrapper(config)]);
+    const route = new Route(endpoint, methodName, config, fn(execMethod));
     // routes.push(route);
     routeFns.push(route.routeFn());
     console.log(route.toString());

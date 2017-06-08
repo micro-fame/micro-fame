@@ -1,7 +1,7 @@
 const { json } = require('micro');
 const { env: { REQ_BODY_LIMIT, REQ_BODY_ENCODING } } = process;
 
-const defaultWrapper = ({ args, argsGetter = 'params' }) => fn => async (req, res) => {
+const defaultWrapper = ({ args, argsGetter = 'params', app }) => fn => async (req, res) => {
   if (req.method.toLowerCase() === 'post') {
     req.body = await json(req, { limit: REQ_BODY_LIMIT, encoding: REQ_BODY_ENCODING });
   }
@@ -16,7 +16,7 @@ const defaultWrapper = ({ args, argsGetter = 'params' }) => fn => async (req, re
     returnValues = Object.values(req[argsGetter]);
   }
 
-  return await fn.apply({}, returnValues);
+  return await fn.apply({ app }, returnValues);
 };
 
 module.exports = defaultWrapper;

@@ -8,7 +8,9 @@ const OK = 'OK';
 let url, caller;
 
 test.before(async t => {
-  const { address, port } = await Boot({ rootDir: __dirname });
+  const { address, port, app } = await Boot({ rootDir: __dirname });
+  app.set('item', 'test');
+  app.set('authToken', 'some-token');
   url = `http://${address}:${port}`;
   caller = axios.create({
     baseURL: url,
@@ -134,5 +136,29 @@ test('Items model', async t => {
   const { statusText, data } = await caller.get(path.normalize('/items/total'));
   t.is(statusText, OK);
   t.is(data, 100);
+});
+
+test('Items model app get test', async t => {
+  const { statusText, data } = await caller.get(path.normalize('/items/app-get-test'));
+  t.is(statusText, OK);
+  t.is(data, 'test');
+});
+
+test('Items model Composers test validating auth', async t => {
+  const { statusText, data } = await caller.get(path.normalize('/items/auth-test'), {
+    headers: { 'authorization': 'some-token' }
+  });
+  t.is(statusText, OK);
+  t.is(data, 'some-token');
+});
+
+test('Items model Composers test validating auth 401 err', async t => {
+  try {
+    await caller.get(path.normalize('/items/auth-test'), {
+      headers: { 'authorization': 'some-token--' }
+    });
+  } catch (err) {
+    t.is(err.response.status, 401);
+  }
 });
 

@@ -23,6 +23,15 @@ const loadModels = (rootDir) => {
 };
 
 /**
+ * Loads compose functions from composers directory
+ * @param {String} rootDir - Root directory
+ */
+const loadComposers = (rootDir) => {
+  const js = loadJS('composers', rootDir);
+  return js;
+};
+
+/**
  * Booting to app. Must be declared one time only.
  * Boot call must be last.
  * @param {Object} [options={}]
@@ -34,6 +43,7 @@ const Boot = async (options = {}) => {
   isInit = true;
   const rootDir = options.rootDir || ROOT_DIR;
   loadModels(rootDir);
+  const composers = loadComposers(rootDir);
   const ds = getDSConfig();
   const models = getModelsConfig();
 
@@ -41,11 +51,12 @@ const Boot = async (options = {}) => {
   const config = {
     ds,
     models,
-    rootDir
+    rootDir,
+    composers
   };
 
   const appInstance = await app(config);
-  return server(options, appInstance.router);
+  return Object.assign({ app: appInstance }, await server(options, appInstance.router));
 };
 
 module.exports = Boot;

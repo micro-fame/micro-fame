@@ -10,10 +10,26 @@ const { createRoutes, initRouter } = require('./server/routes');
 // class having everything. must be init..
 
 const _ds = {};
-
+const _map = new Map();
 class Application {
   constructor(config) {
     readOnly(this, 'config', config);
+  }
+
+  set(key, value) {
+    _map.set(key, value);
+  }
+
+  get(key) {
+    return _map.get(key);
+  }
+
+  getComposers() {
+    const arr = [];
+    this.config.composers.forEach((cFn) => {
+      arr.push(cFn(this));
+    });
+    return arr;
   }
 
   /**
@@ -24,7 +40,7 @@ class Application {
   async initDS(ds) {
     if (!isEmpty(ds)) {
       MongoDBDataSource = require('./MongoDBDataSource');
-      for (var [name, config] of Object.entries(ds)) {
+      for (let [name, config] of Object.entries(ds)) {
         // TODO: connect multiple ds parallel
         if (config.type === 'mongodb') {
           const ds = new MongoDBDataSource(config);
@@ -44,7 +60,7 @@ class Application {
       let routeFns = [];
       for (let [name, { endpoint, remotes, methods }] of Object.entries(models)) {
         if (endpoint) {
-          routeFns = [...routeFns, ...createRoutes(name, endpoint, remotes, methods)];
+          routeFns = [...routeFns, ...createRoutes(name, endpoint, remotes, methods, this)];
         }
       }
       this.router = initRouter(routeFns);
