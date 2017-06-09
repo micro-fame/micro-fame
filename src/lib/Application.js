@@ -27,7 +27,9 @@ class Application {
   getComposers() {
     const arr = [];
     this.config.composers.forEach((cFn) => {
-      arr.push(cFn(this));
+      if (typeof (cFn) === 'function') {
+        cFn && arr.push(cFn(this));
+      }
     });
     return arr;
   }
