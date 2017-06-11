@@ -10,7 +10,10 @@
     ],
     "space-before-function-paren": 0,
     "new-cap": "error",
-    "one-var": "off"
+    "one-var": "off",
+    "no-var": "error",
+    "prefer-const": "error",
+    "no-const-assign": "error"
   },
   "env": {
     "es6": true,

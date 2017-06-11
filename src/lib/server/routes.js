@@ -8,7 +8,7 @@ const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'];
 const defaultWrapper = require('./defaultWrapper');
 
 class Route {
-  constructor(endpoint, methodName, { path, method = 'get' }, execMethod) {
+  constructor(endpoint, methodName, { path, method }, execMethod) {
     assert(path, `Path not exists for method: ${methodName}`);
     this.path = pathM.normalize(`/${endpoint}/${path}`);
 
@@ -43,10 +43,11 @@ exports.createRoutes = (name, endpoint, remotes, methods, app) => {
   // const routes = [];
   console.log(`${name} Routes:`);
   const routeFns = [];
-  let composers = app.getComposers();
+  const composers = app.getComposers();
 
-  for (let [methodName, config] of Object.entries(remotes)) {
+  for (const [methodName, config] of Object.entries(remotes)) {
     config.app = app;
+    config.method = config.method || 'get';
     const execMethod = methods[methodName];
     assert(execMethod, `Method not found for name: ${methodName}, path: ${config.path}`);
 

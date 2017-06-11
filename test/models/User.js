@@ -61,9 +61,9 @@ class User {
     path: '/mixParams/:name',
     method: 'get',
     args: {
-      name: ({ params: { name } }) => name,
       text: ({ query: { text } }) => text,
-      number: ({ query: { number } }) => number
+      number: ({ query: { number } }) => number,
+      name: ({ params: { name } }) => name
     }
   })
   async mixParams(name, text, number) {

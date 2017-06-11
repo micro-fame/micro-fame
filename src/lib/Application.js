@@ -42,7 +42,7 @@ class Application {
   async initDS(ds) {
     if (!isEmpty(ds)) {
       MongoDBDataSource = require('./MongoDBDataSource');
-      for (let [name, config] of Object.entries(ds)) {
+      for (const [name, config] of Object.entries(ds)) {
         // TODO: connect multiple ds parallel
         if (config.type === 'mongodb') {
           const ds = new MongoDBDataSource(config);
@@ -60,7 +60,7 @@ class Application {
   bindModels(models) {
     if (!isEmpty(models)) {
       let routeFns = [];
-      for (let [name, { endpoint, remotes, methods }] of Object.entries(models)) {
+      for (const [name, { endpoint, remotes, methods }] of Object.entries(models)) {
         if (endpoint) {
           routeFns = [...routeFns, ...createRoutes(name, endpoint, remotes, methods, this)];
         }

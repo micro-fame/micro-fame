@@ -12,6 +12,7 @@
     "build": "npm run lint && npm run test"
   },
   "dependencies": {
+    "@captemulation/get-parameter-names": "^1.1.0",
     "bluebird": "^3.5.0",
     "lodash.kebabcase": "^4.1.1",
     "micro": "^7.3.3",

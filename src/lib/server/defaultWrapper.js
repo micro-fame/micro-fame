@@ -1,22 +1,34 @@
 const { json } = require('micro');
+const assert = require('assert');
+const getArgs = require('@captemulation/get-parameter-names');
+
 const { env: { REQ_BODY_LIMIT, REQ_BODY_ENCODING } } = process;
+const VALID_ARGS_GETTER = ['params', 'query', 'body'];
 
-const defaultWrapper = ({ args, argsGetter = 'params', app }) => fn => async (req, res) => {
-  if (req.method.toLowerCase() === 'post') {
-    req.body = await json(req, { limit: REQ_BODY_LIMIT, encoding: REQ_BODY_ENCODING });
-  }
+const defaultWrapper = ({ method, args, argsGetter = 'params', app }) => {
+  assert(VALID_ARGS_GETTER.indexOf(argsGetter) > -1,
+    'Invalid argsGetter. Valid values are `params`, `query`, `body`');
+  argsGetter === 'body' &&
+    assert(method.toLowerCase() === 'post', 'argsGetter === `body`, can be used only with POST.');
+  return fn => {
+    const fnArgs = getArgs(fn);
 
-  let returnValues = [];
-  // TODO strict method args names & count check
-  if (args) {
-    Object.values(args).forEach(function (fn) {
-      returnValues.push(fn(req));
-    });
-  } else {
-    returnValues = Object.values(req[argsGetter]);
-  }
+    return async (req, res) => {
+      const isPost = req.method.toLowerCase() === 'post';
+      const hasArgs = !!args;
+      if (isPost) {
+        req.body = await json(req, { limit: REQ_BODY_LIMIT, encoding: REQ_BODY_ENCODING });
+      }
 
-  return await fn.apply({ app }, returnValues);
+      const returnValues = [];
+
+      fnArgs.forEach(arg => {
+        returnValues.push(hasArgs && args[arg] ? args[arg](req) : req[argsGetter][arg]);
+      });
+
+      return await fn.apply({ app }, returnValues);
+    };
+  };
 };
 
 module.exports = defaultWrapper;
