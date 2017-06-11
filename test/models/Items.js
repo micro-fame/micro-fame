@@ -27,6 +27,17 @@ class Items {
     return token;
   }
 
+  @Remote({
+    path: '/test-token-params/:text',
+    args: {
+      token: ({ headers: { authorization } }) => authorization
+    }
+  })
+  async testTokenParams(token, text) {
+    console.log('tetete', token, text);
+    return 'passed';
+  }
+
 };
 
 module.exports = Items;

@@ -162,3 +162,11 @@ test('Items model Composers test validating auth 401 err', async t => {
   }
 });
 
+test('Items model token and params', async t => {
+  const { statusText, data } = await caller.get(path.normalize('/items/test-token-params/testing'), {
+    headers: { 'authorization': 'some-token' }
+  });
+  t.is(statusText, OK);
+  t.is(data, 'passed');
+});
+
