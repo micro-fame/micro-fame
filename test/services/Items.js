@@ -1,4 +1,4 @@
-const { RestModel, Remote } = require('../../src');
+const { RestService, Remote } = require('../../src');
 
 function RestrictionByUserName(Class, methodName, descriptor) {
   const callback = descriptor.value;
@@ -16,7 +16,7 @@ function RestrictionByUserName(Class, methodName, descriptor) {
   };
 }
 
-@RestModel()
+@RestService()
 class Items {
 
   @Remote({

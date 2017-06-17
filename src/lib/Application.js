@@ -1,6 +1,4 @@
 const assert = require('assert');
-// let createModel;
-let MongoDBDataSource;
 const {
   readOnly,
   isEmpty
@@ -35,32 +33,13 @@ class Application {
   }
 
   /**
-   * Not working. Needs restructuring.
-   * @param {any} ds
+   * @param {any} Services
    * @memberof Application
    */
-  async initDS(ds) {
-    if (!isEmpty(ds)) {
-      MongoDBDataSource = require('./MongoDBDataSource');
-      for (const [name, config] of Object.entries(ds)) {
-        // TODO: connect multiple ds parallel
-        if (config.type === 'mongodb') {
-          const ds = new MongoDBDataSource(config);
-          await ds.connect();
-          _ds[name] = ds;
-        }
-      }
-    }
-  }
-
-  /**
-   * @param {any} models
-   * @memberof Application
-   */
-  bindModels(models) {
-    if (!isEmpty(models)) {
+  bindServices(services) {
+    if (!isEmpty(services)) {
       let routeFns = [];
-      for (const [name, { endpoint, remotes, methods }] of Object.entries(models)) {
+      for (const [name, { endpoint, remotes, methods }] of Object.entries(services)) {
         if (endpoint) {
           routeFns = [...routeFns, ...createRoutes(name, endpoint, remotes, methods, this)];
         }
@@ -78,12 +57,10 @@ const initApp = async (config) => {
   instance = new Application(config);
 
   const {
-    ds,
-    models
+    services
   } = config;
 
-  await instance.initDS(ds);
-  instance.bindModels(models);
+  instance.bindServices(services);
 };
 
 module.exports = async (config) => {

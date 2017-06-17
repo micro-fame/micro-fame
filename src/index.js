@@ -1,7 +1,7 @@
 const Boot = require('./lib/Boot');
-const RestModel = require('./lib/decorators/RestModel');
+const RestService = require('./lib/decorators/RestService');
 const Remote = require('./lib/decorators/Remote');
 
 exports.Boot = Boot;
-exports.RestModel = RestModel;
+exports.RestService = RestService;
 exports.Remote = Remote;

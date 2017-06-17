@@ -131,20 +131,20 @@ test('get postRecipe body', async t => {
   });
 });
 
-// Items model test
-test('Items model', async t => {
+// Items service test
+test('Items service', async t => {
   const { statusText, data } = await caller.get(path.normalize('/items/total'));
   t.is(statusText, OK);
   t.is(data, 100);
 });
 
-test('Items model app get test', async t => {
+test('Items service app get test', async t => {
   const { statusText, data } = await caller.get(path.normalize('/items/app-get-test'));
   t.is(statusText, OK);
   t.is(data, 'test');
 });
 
-test('Items model Composers test validating auth', async t => {
+test('Items service Composers test validating auth', async t => {
   const { statusText, data } = await caller.get(path.normalize('/items/auth-test'), {
     headers: { 'authorization': 'some-token' }
   });
@@ -152,7 +152,7 @@ test('Items model Composers test validating auth', async t => {
   t.is(data, 'some-token');
 });
 
-test('Items model Composers test validating auth 401 err', async t => {
+test('Items service Composers test validating auth 401 err', async t => {
   try {
     await caller.get(path.normalize('/items/auth-test'), {
       headers: { 'authorization': 'some-token--' }
@@ -162,7 +162,7 @@ test('Items model Composers test validating auth 401 err', async t => {
   }
 });
 
-test('Items model token and params', async t => {
+test('Items service token and params', async t => {
   const { statusText, data } = await caller.get(path.normalize('/items/test-token-params/testing'), {
     headers: { 'authorization': 'some-token' }
   });
@@ -170,13 +170,13 @@ test('Items model token and params', async t => {
   t.is(data, 'passed');
 });
 
-test('Items model admin only route', async t => {
+test('Items service admin only route', async t => {
   const { statusText, data } = await caller.get(path.normalize('/items/admin-only-route/admin'));
   t.is(statusText, OK);
   t.is(data, 'Hi Admin.');
 });
 
-test('Items model normal user accessing admin only route 403 err', async t => {
+test('Items service normal user accessing admin only route 403 err', async t => {
   try {
     await caller.get(path.normalize('/items/admin-only-route/user'));
   } catch (err) {

@@ -1,4 +1,4 @@
-const { RestModel, Remote } = require('../../src');
+const { RestService, Remote } = require('../../src');
 
 function PostRemote(config) {
   return Remote(Object.assign({}, {
@@ -7,7 +7,7 @@ function PostRemote(config) {
   }, config));
 }
 
-@RestModel({
+@RestService({
   endpoint: 'no-user'
 })
 class User {

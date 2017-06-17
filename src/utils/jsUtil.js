@@ -11,8 +11,8 @@ exports.loadJS = function (dir, rootDir = process.cwd()) {
   const loadedJS = [];
   const loadDir = path.resolve(rootDir, dir);
   if (fs.existsSync(loadDir)) {
-    const modelFiles = fs.readdirSync(loadDir);
-    modelFiles.forEach(p =>
+    const files = fs.readdirSync(loadDir);
+    files.forEach(p =>
       p.length - p.lastIndexOf('.js') === 3 && loadedJS.push(require(path.resolve(loadDir, p))));
   }
   return loadedJS;
