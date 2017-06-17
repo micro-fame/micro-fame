@@ -6,7 +6,11 @@ module.exports = ({ port = PORT || 0 }, router) => {
   return new Promise((resolve, reject) => {
     const server = micro(router);
     server.listen(port, () => {
-      let { address, family, port } = server.address();
+      const serverAddress = server.address();
+
+      const { family, port } = serverAddress;
+      let { address } = serverAddress;
+
       if (family === 'IPv6' && address === '::') {
         address = '0.0.0.0';
       }

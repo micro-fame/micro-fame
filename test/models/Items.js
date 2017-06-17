@@ -1,5 +1,21 @@
 const { RestModel, Remote } = require('../../src');
 
+function RestrictionByUserName(Class, methodName, descriptor) {
+  const callback = descriptor.value;
+  return {
+    ...descriptor,
+    value(userName) {
+      if (userName !== 'admin') {
+        const e = new Error('Admin is permitted to access.');
+        e.status = 403;
+        throw e;
+      }
+      const args = arguments;
+      return callback.apply(this, args);
+    }
+  };
+}
+
 @RestModel()
 class Items {
 
@@ -34,8 +50,15 @@ class Items {
     }
   })
   async testTokenParams(token, text) {
-    console.log('tetete', token, text);
     return 'passed';
+  }
+
+  @RestrictionByUserName
+  @Remote({
+    path: '/admin-only-route/:userName'
+  })
+  async adminOnlyRoute(userName) {
+    return 'Hi Admin.';
   }
 
 };

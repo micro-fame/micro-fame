@@ -1,5 +1,5 @@
 const UrlPattern = require('url-pattern');
-var pattern = new UrlPattern('/items/auth-test');
+const pattern = new UrlPattern('/items/auth-test');
 
 const auth = (app) => fn => async (req, res) => {
   const isMatched = !!pattern.match(req.url);

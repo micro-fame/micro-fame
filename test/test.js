@@ -170,3 +170,16 @@ test('Items model token and params', async t => {
   t.is(data, 'passed');
 });
 
+test('Items model admin only route', async t => {
+  const { statusText, data } = await caller.get(path.normalize('/items/admin-only-route/admin'));
+  t.is(statusText, OK);
+  t.is(data, 'Hi Admin.');
+});
+
+test('Items model normal user accessing admin only route 403 err', async t => {
+  try {
+    await caller.get(path.normalize('/items/admin-only-route/user'));
+  } catch (err) {
+    t.is(err.response.status, 403);
+  }
+});
