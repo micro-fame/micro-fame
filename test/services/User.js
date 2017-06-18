@@ -29,32 +29,11 @@ class User extends BaseWithoutRest {
   }
 
   @Remote({
-    path: '/get-with-params/:name/:text'
-  })
-  async getWithParams(name, text) {
-    return {
-      name,
-      text
-    };
-  }
-
-  @Remote({
     path: '/getOptionalParam(/:text)',
     method: 'get'
   })
   async getOptionalParam(text) {
     return { text: text };
-  }
-
-  @Remote({
-    path: '/paramsFromQuery',
-    args: {
-      text: ({ query: { text } }) => text,
-      number: ({ query: { number } }) => number
-    }
-  })
-  async paramsFromQuery(text, number) {
-    return { text, number };
   }
 
   @Remote({
@@ -98,15 +77,6 @@ class User extends BaseWithoutRest {
     argsGetter: 'query'
   })
   async argsGetterQuery(name, text) {
-    return { text, name };
-  }
-
-  @Remote({
-    path: '/argsGetterBody',
-    argsGetter: 'body',
-    method: 'post'
-  })
-  async argsGetterBody(name, text) {
     return { text, name };
   }
 
