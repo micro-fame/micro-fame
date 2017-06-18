@@ -1,12 +1,10 @@
 const assert = require('assert');
-const { isEmpty, validClassMethodNames, getClassMethod } = require('../utils/objectUtils');
-
 const kebabCase = require('lodash.kebabcase');
 
 // hard-coding types for now
 const dsTypes = ['mongodb'];
 const _ds = {};
-const _models = {};
+const _services = {};
 const _remotes = {};
 
 exports.registerDS = function (config) {
@@ -24,47 +22,38 @@ exports.registerDS = function (config) {
   console.log('Registry registerDS', _ds);
 };
 
-exports.registerModel = function (klass) {
-  const {
-    config,
-    schema,
-    name
-  } = klass;
-
-  const {
-    ds
-  } = config;
-  assert(name, 'Model name not defined.');
-  assert(ds, `DS not configured for model: ${name}`);
-
-  isEmpty(schema) && console.warn(`Schema is empty for model: ${name}`);
-  console.log('klass', klass);
-  _models[name] = klass;
-};
-
 /**
- * @param {String} Class - Rest model class
+ * @param {String} Class - Rest service class
  * @param {Object} [config]
  * @param {String} config.endpoint - Rest endpoint of this class. Defaults to kebab cased class name
  */
-exports.registerRestModel = (klass, config = {}) => {
-  const { name } = klass;
+exports.registerRestService = (Class, config = {}) => {
+  const { name } = Class;
   const endpoint = config.endpoint || kebabCase(name);
 
-  assert(name, 'Model name not defined.');
-  assert(endpoint, `Endpoint not configured for model: ${name}`);
-  const methods = {};
-  validClassMethodNames(klass).forEach(n => {
-    methods[n] = getClassMethod(klass, n);
-  });
+  assert(name, 'Rest service name not defined.');
+  assert(endpoint, `Endpoint not configured for service: ${name}`);
 
-  _models[name] = {
-    name: name,
+  _services[name] = {
+    name,
     endpoint,
     remotes: _remotes[name],
-    methods,
-    klass
+    instance: new Class(),
+    parentClassName: Object.getPrototypeOf(Class).name
   };
+};
+
+/**
+ * Function will check all the loaded services and bind parent's route.
+ */
+exports.bindParentRoutes = () => {
+  for (const [name, { parentClassName, remotes }] of Object.entries(_services)) {
+    // bind parent remotes
+    if (parentClassName) {
+      const parentRemotes = _remotes[parentClassName] || [];
+      _services[name].remotes = { ...parentRemotes, ...remotes };
+    }
+  }
 };
 
 exports.registerRemote = (methodName, config, className) => {
@@ -80,6 +69,6 @@ exports.getDSConfig = () => {
   return _ds;
 };
 
-exports.getModelsConfig = () => {
-  return Object.freeze(_models);
+exports.getServicesConfig = () => {
+  return Object.freeze(_services);
 };

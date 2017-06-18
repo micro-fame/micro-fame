@@ -6,9 +6,9 @@
   "author": "Yogesh Agarwal",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon --exec babel-node test/rest-test.js",
+    "start": "nodemon --exec babel-node test/index.js",
     "lint": "eslint src/**/**/*.js",
-    "test": "ava test/test.js",
+    "test": "ava test/*-test.js",
     "build": "npm run lint && npm run test"
   },
   "dependencies": {

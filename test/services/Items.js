@@ -1,5 +1,6 @@
-const { RestModel, Remote } = require('../../src');
+const { RestService, Remote } = require('../../src');
 
+const BaseWithRest = require('./BaseWithRest');
 function RestrictionByUserName(Class, methodName, descriptor) {
   const callback = descriptor.value;
   return {
@@ -16,8 +17,8 @@ function RestrictionByUserName(Class, methodName, descriptor) {
   };
 }
 
-@RestModel()
-class Items {
+@RestService()
+class Items extends BaseWithRest {
 
   @Remote({
     path: '/total'
@@ -30,7 +31,13 @@ class Items {
     path: '/app-get-test'
   })
   async appGet() {
-    return this.app.get('item');
+    const total = await this.getTotalItems();
+    const superTestVal = await super.remote();
+    return {
+      appItem: this.app.get('item'),
+      total,
+      superTestVal
+    };
   }
 
   @Remote({
