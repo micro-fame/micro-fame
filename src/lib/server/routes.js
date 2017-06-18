@@ -2,6 +2,7 @@ const assert = require('assert');
 const pathM = require('path');
 const microRouter = require('microrouter');
 const compose = require('micro-compose');
+const getArgs = require('@captemulation/get-parameter-names');
 const { router, get, post } = microRouter;
 
 const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'];
@@ -39,20 +40,21 @@ exports.initRouter = (routeFns) => {
   return router.apply({}, routeFns);
 };
 
-exports.createRoutes = (name, endpoint, remotes, methods, app) => {
+exports.createRoutes = (name, endpoint, remotes, serviceInstance, app) => {
   // const routes = [];
   console.log(`${name} Routes:`);
   const routeFns = [];
   const composers = app.getComposers();
 
   for (const [methodName, config] of Object.entries(remotes)) {
-    config.app = app;
     config.method = config.method || 'get';
-    const execMethod = methods[methodName];
+    const execMethod = serviceInstance[methodName];
+    config.fnArgs = getArgs(execMethod);
     assert(execMethod, `Method not found for name: ${methodName}, path: ${config.path}`);
 
+    // bind with service instance
     const fn = compose.apply({}, [...composers, defaultWrapper(config)]);
-    const route = new Route(endpoint, methodName, config, fn(execMethod));
+    const route = new Route(endpoint, methodName, config, fn(execMethod.bind(serviceInstance)));
     // routes.push(route);
     routeFns.push(route.routeFn());
     console.log(route.toString());

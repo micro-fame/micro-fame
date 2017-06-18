@@ -6,9 +6,8 @@ const {
 const { createRoutes, initRouter } = require('./server/routes');
 
 // class having everything. must be init..
-
-const _ds = {};
 const _map = new Map();
+const _servicesMap = {};
 class Application {
   constructor(config) {
     readOnly(this, 'config', config);
@@ -39,12 +38,15 @@ class Application {
   bindServices(services) {
     if (!isEmpty(services)) {
       let routeFns = [];
-      for (const [name, { endpoint, remotes, methods }] of Object.entries(services)) {
+      for (const [name, { endpoint, remotes, instance }] of Object.entries(services)) {
         if (endpoint) {
-          routeFns = [...routeFns, ...createRoutes(name, endpoint, remotes, methods, this)];
+          _servicesMap[name] = instance;
+          instance.app = this;
+          routeFns = [...routeFns, ...createRoutes(name, endpoint, remotes, instance, this)];
         }
       }
       this.router = initRouter(routeFns);
+      this.services = Object.freeze(_servicesMap);
     }
   }
 };
@@ -66,5 +68,5 @@ const initApp = async (config) => {
 module.exports = async (config) => {
   assert(!isInit, 'app already initialized.');
   !isInit && await initApp(config);
-  return instance;
+  return Object.freeze(instance);
 };

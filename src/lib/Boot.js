@@ -1,8 +1,5 @@
 const assert = require('assert');
-const {
-  getDSConfig,
-  getServicesConfig
-} = require('./Registry');
+const { getDSConfig, getServicesConfig, bindParentRoutes } = require('./Registry');
 
 const { loadJS } = require('../utils/jsUtil');
 
@@ -43,17 +40,13 @@ const Boot = async (options = {}) => {
   isInit = true;
   const rootDir = options.rootDir || ROOT_DIR;
   loadServices(rootDir);
+  bindParentRoutes();
   const composers = loadComposers(rootDir);
   const ds = getDSConfig();
   const services = getServicesConfig();
 
   // construct the final config object
-  const config = {
-    ds,
-    services,
-    rootDir,
-    composers
-  };
+  const config = { ds, services, rootDir, composers };
 
   const appInstance = await app(config);
   return Object.assign({ app: appInstance }, await server(options, appInstance.router));

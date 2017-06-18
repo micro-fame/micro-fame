@@ -1,5 +1,5 @@
 const { RestService, Remote } = require('../../src');
-
+const BaseWithoutRest = require('./BaseWithoutRest');
 function PostRemote(config) {
   return Remote(Object.assign({}, {
     argsGetter: 'body',
@@ -10,7 +10,7 @@ function PostRemote(config) {
 @RestService({
   endpoint: 'no-user'
 })
-class User {
+class User extends BaseWithoutRest {
 
   @Remote({
     path: '/',

@@ -1,6 +1,4 @@
 const assert = require('assert');
-const { validClassMethodNames, getClassMethod } = require('../utils/objectUtils');
-
 const kebabCase = require('lodash.kebabcase');
 
 // hard-coding types for now
@@ -29,24 +27,33 @@ exports.registerDS = function (config) {
  * @param {Object} [config]
  * @param {String} config.endpoint - Rest endpoint of this class. Defaults to kebab cased class name
  */
-exports.registerRestService = (klass, config = {}) => {
-  const { name } = klass;
+exports.registerRestService = (Class, config = {}) => {
+  const { name } = Class;
   const endpoint = config.endpoint || kebabCase(name);
 
   assert(name, 'Rest service name not defined.');
   assert(endpoint, `Endpoint not configured for service: ${name}`);
-  const methods = {};
-  validClassMethodNames(klass).forEach(n => {
-    methods[n] = getClassMethod(klass, n);
-  });
 
   _services[name] = {
-    name: name,
+    name,
     endpoint,
     remotes: _remotes[name],
-    methods,
-    klass
+    instance: new Class(),
+    parentClassName: Object.getPrototypeOf(Class).name
   };
+};
+
+/**
+ * Function will check all the loaded services and bind parent's route.
+ */
+exports.bindParentRoutes = () => {
+  for (const [name, { parentClassName, remotes }] of Object.entries(_services)) {
+    // bind parent remotes
+    if (parentClassName) {
+      const parentRemotes = _remotes[parentClassName] || [];
+      _services[name].remotes = { ...parentRemotes, ...remotes };
+    }
+  }
 };
 
 exports.registerRemote = (methodName, config, className) => {

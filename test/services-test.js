@@ -1,21 +1,17 @@
 import test from 'ava';
-import axios from 'axios';
 import path from 'path';
-const { Boot } = require('../src');
+import { initServerCaller } from './fixtures';
 
 const OK = 'OK';
 
-let url, caller;
+let caller;
 
 test.before(async t => {
-  const { address, port, app } = await Boot({ rootDir: __dirname });
+  const init = await initServerCaller();
+  const app = init.app;
+  caller = init.caller;
   app.set('item', 'test');
   app.set('authToken', 'some-token');
-  url = `http://${address}:${port}`;
-  caller = axios.create({
-    baseURL: url,
-    timeout: 5000
-  });
 });
 
 test('index', async t => {
@@ -141,7 +137,11 @@ test('Items service', async t => {
 test('Items service app get test', async t => {
   const { statusText, data } = await caller.get(path.normalize('/items/app-get-test'));
   t.is(statusText, OK);
-  t.is(data, 'test');
+  t.deepEqual(data, {
+    appItem: 'test',
+    superTestVal: 'hello',
+    total: 100
+  });
 });
 
 test('Items service Composers test validating auth', async t => {
