@@ -51,7 +51,7 @@ exports.bindParentRoutes = () => {
     // bind parent remotes
     if (parentClassName) {
       const parentRemotes = _remotes[parentClassName] || [];
-      _services[name].remotes = { ...parentRemotes, ...remotes };
+      _services[name].remotes = Object.assign({}, parentRemotes, remotes);
     }
   }
 };
