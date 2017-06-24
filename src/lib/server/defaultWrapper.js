@@ -4,7 +4,7 @@ const assert = require('assert');
 const { env: { REQ_BODY_LIMIT, REQ_BODY_ENCODING } } = process;
 const VALID_ARGS_GETTER = ['params', 'query', 'body'];
 
-const defaultWrapper = ({ method, args, argsGetter = 'params', fnArgs }) => {
+const defaultWrapper = ({ method, args, argsGetter = 'params', fnArgsNames }) => {
   assert(VALID_ARGS_GETTER.indexOf(argsGetter) > -1,
     'Invalid argsGetter. Valid values are `params`, `query`, `body`');
   argsGetter === 'body' &&
@@ -19,7 +19,7 @@ const defaultWrapper = ({ method, args, argsGetter = 'params', fnArgs }) => {
 
       const returnValues = [];
 
-      fnArgs.forEach(arg => {
+      fnArgsNames.forEach(arg => {
         returnValues.push(hasArgs && args[arg] ? args[arg](req) : req[argsGetter][arg]);
       });
 

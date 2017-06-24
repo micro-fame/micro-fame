@@ -57,7 +57,19 @@ class Items extends BaseWithRest {
     }
   })
   async testTokenParams(token, text) {
-    return 'passed';
+    return { text };
+  }
+
+  @Remote({
+    path: '/test-token-body',
+    args: {
+      token: ({ headers: { authorization } }) => authorization
+    },
+    argsGetter: 'body',
+    method: 'post'
+  })
+  async testTokenBody(token, text) {
+    return { text };
   }
 
   @RestrictionByUserName

@@ -1,6 +1,5 @@
-const {
-  registerRemote
-} = require('../Registry');
+const getArgs = require('@captemulation/get-parameter-names');
+const { registerRemote } = require('../Registry');
 
 /**
  * Decorator for remoting class methods
@@ -12,7 +11,7 @@ const {
  */
 const Remote = (config) => {
   return (Class, methodName, descriptor) => {
-    registerRemote(methodName, config, Class.constructor.name);
+    registerRemote(methodName, config, Class.constructor.name, getArgs(descriptor.value));
     return descriptor;
   };
 };

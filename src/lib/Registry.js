@@ -56,12 +56,13 @@ exports.bindParentRoutes = () => {
   }
 };
 
-exports.registerRemote = (methodName, config, className) => {
+exports.registerRemote = (methodName, config, className, fnArgsNames = []) => {
   assert(config, `config not defined for method: ${methodName} of Class: ${className}`);
   assert(config.path, `path not defined for remote method: ${methodName} of Class: ${className}`);
   if (!_remotes[className]) {
     _remotes[className] = {};
   }
+  config.fnArgsNames = fnArgsNames;
   _remotes[className][methodName] = config;
 };
 

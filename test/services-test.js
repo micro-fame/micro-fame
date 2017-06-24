@@ -163,11 +163,25 @@ test('Items service Composers test validating auth 401 err', async t => {
 });
 
 test('Items service token and params', async t => {
-  const { statusText, data } = await caller.get(path.normalize('/items/test-token-params/testing'), {
+  const { statusText, data } = await caller.get(path.normalize('/items/test-token-params/hi'), {
     headers: { 'authorization': 'some-token' }
   });
   t.is(statusText, OK);
-  t.is(data, 'passed');
+  t.deepEqual(data, {
+    text: 'hi'
+  });
+});
+
+test('Items service token and body', async t => {
+  const text = 'hi';
+  const { statusText, data } = await caller.post(path.normalize('/items/test-token-body'), {
+    headers: { 'authorization': 'some-token' },
+    text
+  });
+  t.is(statusText, OK);
+  t.deepEqual(data, {
+    text
+  });
 });
 
 test('Items service admin only route', async t => {
