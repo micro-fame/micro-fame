@@ -4,7 +4,7 @@ const assert = require('assert');
 const { env: { REQ_BODY_LIMIT, REQ_BODY_ENCODING } } = process;
 const VALID_ARGS_GETTER = ['params', 'query', 'body'];
 
-const defaultWrapper = ({ method, args, argsGetter = 'params', fnArgsNames }) => {
+const defaultWrapper = ({ method, args, argsGetter = 'params', fnArgsNames, ignoreJSONParsing = false }) => {
   assert(VALID_ARGS_GETTER.indexOf(argsGetter) > -1,
     'Invalid argsGetter. Valid values are `params`, `query`, `body`');
   argsGetter === 'body' &&
@@ -13,7 +13,7 @@ const defaultWrapper = ({ method, args, argsGetter = 'params', fnArgsNames }) =>
     const hasArgs = !!args;
     return async (req, res) => {
       const isPost = req.method.toLowerCase() === 'post';
-      if (isPost) {
+      if (!ignoreJSONParsing && isPost) {
         req.body = await json(req, { limit: REQ_BODY_LIMIT, encoding: REQ_BODY_ENCODING });
       }
 
