@@ -1,8 +1,5 @@
 const assert = require('assert');
-const {
-  readOnly,
-  isEmpty
-} = require('../utils/objectUtils');
+const { readOnly, isEmpty } = require('../utils/objectUtil');
 const { createRoutes, initRouter } = require('./server/routes');
 
 // class having everything. must be init..

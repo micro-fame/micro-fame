@@ -5,4 +5,5 @@ node_js:
 cache: yarn
 script:
   - npm run build
+services: mongodb
 
