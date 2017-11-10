@@ -1,7 +1,7 @@
 const assert = require('assert');
 const { getDSConfig, getServicesConfig, bindParentRoutes } = require('./Registry');
 
-const { loadJS } = require('../utils/jsUtil');
+const { loadJS, execJS } = require('../utils/jsUtil');
 
 const server = require('./server');
 
@@ -14,8 +14,8 @@ let isInit = false;
  * Loads services from services directory.
  * @param {String} rootDir - Root directory
  */
-const loadServices = (rootDir) => {
-  const js = loadJS('services', rootDir);
+const loadServices = async (rootDir) => {
+  const js = await loadJS('services', rootDir);
   assert(js.length, `Not found services directory in root directory: ${rootDir}`);
 };
 
@@ -23,8 +23,8 @@ const loadServices = (rootDir) => {
  * Loads compose functions from composers directory
  * @param {String} rootDir - Root directory
  */
-const loadComposers = (rootDir) => {
-  const js = loadJS('composers', rootDir);
+const loadComposers = async (rootDir) => {
+  const js = await loadJS('composers', rootDir);
   return js;
 };
 
@@ -39,9 +39,9 @@ const Boot = async (options = {}) => {
   assert(!isInit, 'Application already initialized. Multiple Boot calls.');
   isInit = true;
   const rootDir = options.rootDir || ROOT_DIR;
-  loadServices(rootDir);
+  await loadServices(rootDir);
   bindParentRoutes();
-  const composers = loadComposers(rootDir);
+  const composers = await loadComposers(rootDir);
   const ds = getDSConfig();
   const services = getServicesConfig();
 
@@ -49,6 +49,7 @@ const Boot = async (options = {}) => {
   const config = { ds, services, rootDir, composers };
 
   const appInstance = await app(config);
+  await execJS('bootFns', [appInstance], rootDir);
   return Object.assign({ app: appInstance }, await server(options, appInstance.router));
 };
 

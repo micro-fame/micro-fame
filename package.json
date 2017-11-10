@@ -18,7 +18,8 @@
     "micro": "^9.0.0",
     "micro-compose": "^0.0.3",
     "micro-router": "^0.1.1",
-    "microrouter": "^3.0.0"
+    "microrouter": "^3.0.0",
+    "mz": "^2.7.0"
   },
   "devDependencies": {
     "ava": "^0.22.0",
@@ -39,6 +40,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "form-data": "^2.3.1",
     "formidable": "^1.1.1",
+    "mongodb": "^2.2.33",
     "nodemon": "^1.12.1",
     "then-sleep": "^1.0.1",
     "url-pattern": "^1.0.3"
