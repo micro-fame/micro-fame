@@ -32,7 +32,6 @@ exports.execJS = async function (dir, args, rootDir = process.cwd()) {
   if (await isDirExists(loadDir)) {
     const files = await fs.readdir(loadDir);
     for (const p of files) {
-      console.log(p);
       if (p.length - p.lastIndexOf('.js') === 3) {
         await require(path.resolve(loadDir, p)).apply(null, args);
       }
