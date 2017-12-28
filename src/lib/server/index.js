@@ -15,7 +15,7 @@ module.exports = ({ port = PORT || 0 }, router) => {
         address = '0.0.0.0';
       }
       console.log(`Listening to ${address}:${port}`);
-      resolve({ address, port });
+      resolve({ address, port, server });
     });
 
     server.on('error', err => {
